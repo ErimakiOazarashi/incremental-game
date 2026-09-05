@@ -1,0 +1,585 @@
+:root {
+  --ink: #e8e6f0;
+  --ink-dim: #9a95b8;
+  --card: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --accent: #8f7ff7;
+  --accent-soft: #c4bbff;
+  --gold: #f7d97f;
+  --danger: #f77f8f;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  transition: background 1.2s ease;
+}
+
+/* 深度に応じて背景が深くなる */
+body.depth-1 { background: linear-gradient(180deg, #2b2a4a 0%, #1e1c38 100%); }
+body.depth-2 { background: linear-gradient(180deg, #262244 0%, #171530 100%); }
+body.depth-3 { background: linear-gradient(180deg, #201d3e 0%, #110f28 100%); }
+body.depth-4 { background: linear-gradient(180deg, #171a38 0%, #0a0c20 100%); }
+body.depth-5 { background: linear-gradient(180deg, #101228 0%, #050612 100%); }
+
+#app {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 12px 16px 80px;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.title-block h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: 0.35em;
+}
+
+.subtitle {
+  color: var(--ink-dim);
+  font-size: 0.8rem;
+}
+
+.stat-block {
+  text-align: right;
+}
+
+.fragments {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent-soft);
+}
+
+.fragments small {
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+}
+
+.persec,
+.depth {
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+}
+
+.buffs {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.buff {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+}
+
+.buff.rem {
+  background: rgba(143, 127, 247, 0.35);
+  border-color: var(--accent);
+  animation: pulse 1.5s infinite;
+}
+
+.buff.debuff {
+  background: rgba(247, 127, 143, 0.25);
+  border-color: var(--danger);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 16px;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}
+
+/* --- 夢タブ --- */
+.tap-area {
+  text-align: center;
+  margin: 12px 0 24px;
+}
+
+.tap-button {
+  font-size: 3rem;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: radial-gradient(circle at 35% 30%, rgba(196, 187, 255, 0.35), rgba(143, 127, 247, 0.1));
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.tap-button span {
+  font-size: 0.7rem;
+  color: var(--ink-dim);
+}
+
+.tap-button.tapped {
+  animation: tap-pop 0.18s ease;
+}
+
+@keyframes tap-pop {
+  50% { transform: scale(0.93); }
+}
+
+.tap-gain {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+}
+
+.layer {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+}
+
+.layer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.layer-head h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.accel {
+  font-size: 0.75rem;
+  color: var(--gold);
+}
+
+.flavor {
+  margin: 4px 0 10px;
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+}
+
+.dwellers {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.dweller {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.55;
+}
+
+.dweller.affordable {
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+.dweller:active {
+  transform: scale(0.98);
+}
+
+.d-name {
+  font-size: 0.85rem;
+}
+
+.d-count {
+  font-weight: 700;
+  color: var(--accent-soft);
+  text-align: right;
+}
+
+.d-prod {
+  grid-column: 1;
+  font-size: 0.7rem;
+  color: var(--ink-dim);
+}
+
+.d-price {
+  font-size: 0.75rem;
+  color: var(--gold);
+  text-align: right;
+}
+
+.unlock {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px dashed var(--card-border);
+  background: none;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.unlock.affordable {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(247, 217, 127, 0.08);
+}
+
+.u-cost {
+  display: block;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.bottom-note {
+  text-align: center;
+  color: var(--ink-dim);
+  font-size: 0.85rem;
+}
+
+/* --- 目覚めタブ --- */
+.awaken-status {
+  display: flex;
+  gap: 24px;
+  font-size: 1.05rem;
+  margin-bottom: 12px;
+}
+
+.awaken-box {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+.awaken-button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  border: 1px solid var(--gold);
+  background: rgba(247, 217, 127, 0.12);
+  color: var(--gold);
+  cursor: pointer;
+}
+
+.hint {
+  color: var(--ink-dim);
+  font-size: 0.75rem;
+}
+
+.panel h2 {
+  font-size: 1rem;
+  margin: 18px 0 8px;
+}
+
+.shop {
+  display: grid;
+  gap: 8px;
+}
+
+.upgrade {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.55;
+}
+
+.upgrade.affordable {
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+.upgrade:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.u-name {
+  font-size: 0.9rem;
+}
+
+.u-name em {
+  font-style: normal;
+  color: var(--ink-dim);
+  font-size: 0.75rem;
+}
+
+.u-desc {
+  grid-column: 1;
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+}
+
+.u-price {
+  color: var(--gold);
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+/* --- 夢日記 --- */
+.journal-head {
+  color: var(--accent-soft);
+}
+
+.achievements {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.achievement {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0.5;
+}
+
+.achievement.done {
+  opacity: 1;
+  border-color: var(--gold);
+}
+
+.a-name {
+  display: block;
+  font-size: 0.85rem;
+}
+
+.achievement.done .a-name {
+  color: var(--gold);
+}
+
+.a-desc {
+  font-size: 0.7rem;
+  color: var(--ink-dim);
+}
+
+.stats-list {
+  color: var(--ink-dim);
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+/* --- 設定 --- */
+.setting-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.setting-row button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.setting-row button.active {
+  border-color: var(--accent);
+  color: var(--accent-soft);
+}
+
+.setting-row button.danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.warn {
+  color: var(--danger);
+}
+
+.version {
+  margin-top: 32px;
+  color: var(--ink-dim);
+  font-size: 0.75rem;
+}
+
+/* --- 悪夢 --- */
+.nightmare {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 50;
+}
+
+.nightmare button {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid var(--danger);
+  background: rgba(40, 5, 15, 0.92);
+  color: var(--ink);
+  cursor: pointer;
+  animation: pulse 0.8s infinite;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.nm-title {
+  font-weight: 700;
+  color: var(--danger);
+}
+
+.nm-desc,
+.nm-timer {
+  font-size: 0.8rem;
+}
+
+@keyframes pulse {
+  50% { transform: scale(1.04); }
+}
+
+/* --- モーダル・トースト --- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-body {
+  background: #221f3e;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  max-width: 420px;
+  width: calc(100% - 40px);
+}
+
+.modal-body textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--ink);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  font-size: 0.7rem;
+}
+
+.modal-body button {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  background: none;
+  color: var(--accent-soft);
+  cursor: pointer;
+}
+
+.offline-gain {
+  font-size: 1.4rem;
+  color: var(--accent-soft);
+  font-weight: 700;
+}
+
+#toasts {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.toast {
+  background: rgba(30, 26, 56, 0.95);
+  border: 1px solid var(--accent);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  animation: toast-in 0.25s ease, toast-out 0.4s ease 3.5s forwards;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+@keyframes toast-out {
+  to { opacity: 0; }
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 560px) {
+  .topbar {
+    flex-direction: column;
+  }
+  .stat-block {
+    text-align: left;
+  }
+  .buffs {
+    justify-content: flex-start;
+  }
+}
