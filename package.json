@@ -1,0 +1,26 @@
+{
+  "name": "nemuri-no-ato",
+  "private": true,
+  "version": "0.1.0",
+  "description": "眠りの跡 — 夢潜行インクリメンタルゲーム",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ErimakiOazarashi/incremental-game.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0"
+  },
+  "dependencies": {
+    "break_eternity.js": "^2.1.3"
+  }
+}
