@@ -62,10 +62,6 @@ export function clickNightmare(state: GameState, now: number): boolean {
 
 /** 悪夢の出現・時間切れ処理。毎ティック呼ぶ */
 export function tickNightmare(state: GameState, now: number): void {
-  if (state.event.nextNightmareAt === 0) {
-    scheduleNextNightmare(state, now);
-    return;
-  }
   const nm = state.event.nightmare;
   if (nm) {
     if (now >= nm.expiresAt) {
@@ -74,6 +70,10 @@ export function tickNightmare(state: GameState, now: number): void {
       state.event.debuffUntil = now + NIGHTMARE_DEBUFF_MS;
       scheduleNextNightmare(state, now);
     }
+    return;
+  }
+  if (state.event.nextNightmareAt === 0) {
+    scheduleNextNightmare(state, now);
     return;
   }
   if (now >= state.event.nextNightmareAt) {
