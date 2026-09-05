@@ -2,7 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    # main と現在の既定ブランチの両方から配信する
+    # （既定ブランチを main に切り替えたら main だけに戻してよい）
+    branches: [main, claude/incremental-game-design-gzsgea]
   workflow_dispatch:
 
 permissions:
